@@ -1,6 +1,7 @@
 const express = require("express");
 const { matchedData } = require("express-validator");
 const app = express();
+const cors = require("cors");
 const port = 3001;
 const { Pool } = require("pg");
 const validationSchema = require("./schema/validation-schema");
@@ -8,6 +9,8 @@ const validateSchema = require("./middleware/validate-schema");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors());
 
 const pool = new Pool({
 	user: "postgres",
