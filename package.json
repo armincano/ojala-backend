@@ -1,0 +1,18 @@
+{
+  "name": "ojala-backend",
+  "version": "1.0.0",
+  "description": "Backend of a Single Page Application built with React, a Bootstrap custom UI, Express.js and PostgreSQL. Serves as the online presence for the “¡Ojalá!” phone app.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "nodemon": "^3.0.1",
+    "pg": "^8.11.3"
+  }
+}
