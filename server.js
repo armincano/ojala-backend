@@ -92,6 +92,7 @@ app.post(
 		const data = matchedData(req);
 		let client;
 		let id;
+		const submitDate = new Date();
 
 		try {
 			client = await pool.connect();
@@ -102,11 +103,11 @@ app.post(
 			await client.query("BEGIN");
 
 			if (rows.length > 0) {
-				const query = `INSERT INTO visitor_issue (visitor_id, issue)
-                VALUES($1, $2)
+				const query = `INSERT INTO visitor_issue (visitor_id, issue, submit_date)
+                VALUES($1, $2, $3)
 				RETURNING id;`;
 
-				await client.query(query, [id, data.issue]);
+				await client.query(query, [id, data.issue, submitDate]);
 
 				await client.query("COMMIT");
 				return res.status(201).send("Issue created for an existing visitor!");
@@ -122,9 +123,9 @@ app.post(
 					data.age,
 				]);
 
-				const query2 = `INSERT INTO visitor_issue (visitor_id, issue)
-				VALUES($1, $2)
-				RETURNING id, visitor_id, issue;`;
+				const query2 = `INSERT INTO visitor_issue (visitor_id, issue, submit_date)
+                VALUES($1, $2, $3)
+				RETURNING id, visitor_id, issue, submit_date;`;
 
 				await client.query(query2, [rows[0].id, data.issue]);
 
