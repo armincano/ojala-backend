@@ -38,7 +38,7 @@ app.get("/contact", async (req, res) => {
 	try {
 		client = await pool.connect();
 
-		const query = `SELECT v.id, v.first_name, v.last_name, v.email, vu.issue
+		const query = `SELECT v.id, v.first_name, v.last_name, v.email, vu.issue, vu.submit_date
 		FROM visitor v
 		join visitor_issue vu on v.id = vu.visitor_id
 		ORDER BY v.last_name;`;
@@ -92,8 +92,8 @@ app.post(
 		const data = matchedData(req);
 		let client;
 		let id;
-		const submitDate = new Date();
-
+		let submitDate = new Date();
+		
 		try {
 			client = await pool.connect();
 			const query = `SELECT * FROM visitor WHERE email=$1;`;
@@ -127,7 +127,7 @@ app.post(
                 VALUES($1, $2, $3)
 				RETURNING id, visitor_id, issue, submit_date;`;
 
-				await client.query(query2, [rows[0].id, data.issue]);
+				await client.query(query2, [rows[0].id, data.issue, submitDate]);
 
 				await client.query("COMMIT");
 				return res
