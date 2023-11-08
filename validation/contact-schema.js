@@ -1,10 +1,10 @@
 const {param, query, body, check} = require("express-validator");
 
-const visitorGetSchema = [
+const contactGetSchema = [
     param("id").exists({values: "falsy"}).isInt({min: 0}).escape(),
 ];
 
-const visitorPostSchema = [
+const contactPostSchema = [
     body("firstName").exists({values: "falsy"}).isString().isLength({min: 2}).withMessage("The minimum length for firstName is 2").escape(),
     body("lastName").exists({values: "falsy"}).isString().isLength({min: 2}).withMessage("The minimum length for firstName is 2").escape(),
     body("age").exists({values: "falsy"}).isInt({min: 18}).withMessage("The minimum age is the integer 18").escape(),
@@ -12,5 +12,7 @@ const visitorPostSchema = [
     body("issue").matches(/app-install|app-mistake|other/).escape(),
 ];
 
-exports.visitorGetSchema = visitorGetSchema;
-exports.visitorPostSchema = visitorPostSchema;
+module.exports = {
+	contactGetSchema,
+    contactPostSchema
+};

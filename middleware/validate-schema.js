@@ -1,11 +1,13 @@
-const {validationResult} = require("express-validator");
+const { validationResult } = require("express-validator");
 
 function validateSchema(req, res, next) {
-    const errors = validationResult(req);
+	const errors = validationResult(req);
 
-	if(!errors.isEmpty()){
+	if (!errors.isEmpty()) {
 		return res.send({ errors: errors.array() });
 	}
-    next()
+	next();
 }
-exports.validateSchema = validateSchema;
+module.exports = {
+	validateSchema,
+};
