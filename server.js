@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
 const { Pool } = require("pg");
+const { checkPoolConnection } = require("./utils/utils.pool")
 const { handleNoMatchPath } = require("./middleware/handle-no-match-path");
 const {
 	handleErrorInvalidJson,
@@ -27,6 +28,8 @@ const pool = new Pool({
 	user: process.env.PG_USER,
 	password: process.env.PG_PASSWORD,
 });
+
+checkPoolConnection(pool)
 
 // attaches the pool object to the req object as req.pool.
 app.use((req, res, next) => {
