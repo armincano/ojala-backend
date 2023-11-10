@@ -10,6 +10,7 @@ const {
 	handleErrorInvalidJson,
 } = require("./middleware/handle-error-invalid-json");
 const contact = require("./routes/contact")
+const admin = require("./routes/admin")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,6 +44,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/contact", contact)
+
+app.use("/admin", admin)
 
 app.use(handleNoMatchPath);
 

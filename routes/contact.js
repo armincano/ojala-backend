@@ -6,9 +6,10 @@ const {
 	contactGetSchema,
 	contactPostSchema,
 } = require("../validation/contact-schema");
+const authenticate = require("../middleware/authenticate");
 
 //getting all inquiries
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
 	let client;
 	try {
 		client = await req.pool.connect();
@@ -31,7 +32,7 @@ router.get("/", async (req, res) => {
 });
 
 //getting a specific inquiry
-router.get("/:id", contactGetSchema, validateSchema, async (req, res) => {
+router.get("/:id", authenticate, contactGetSchema, validateSchema, async (req, res) => {
 	const data = matchedData(req);
 	let client;
 	try {
@@ -54,7 +55,7 @@ router.get("/:id", contactGetSchema, validateSchema, async (req, res) => {
 });
 
 //sending an inquiry
-router.post("/", contactPostSchema, validateSchema, async (req, res) => {
+router.post("/", authenticate, contactPostSchema, validateSchema, async (req, res) => {
 	const data = matchedData(req);
 	let client;
 	let id;
