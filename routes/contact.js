@@ -55,7 +55,7 @@ router.get("/:id", authenticate, contactGetSchema, validateSchema, async (req, r
 });
 
 //sending an inquiry
-router.post("/", authenticate, contactPostSchema, validateSchema, async (req, res) => {
+router.post("/", contactPostSchema, validateSchema, async (req, res) => {
 	const data = matchedData(req);
 	let client;
 	let id;
