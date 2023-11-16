@@ -1,18 +1,20 @@
 const express = require("express");
 const bcrypt = require("bcrypt"); //hash password before saving it to DB
-const authenticate = require("../middleware/authenticate");
+const authorize = require("../middleware/authorize");
 const generateJwt = require("../utils/utils.generateJwt");
 const router = express.Router();
+const { validateSchema } = require("../middleware/validate-schema");
+const { adminPostSchema } = require("../validation/admin-schema");
 
 // user sign-in / login
-router.post("/sign-in", async (req, res) => {
+router.post("/sign-in", adminPostSchema, validateSchema, async (req, res) => {
 	let client;
-	const { email, password } = req.body;
+	const data = matchedData(req);
 
 	try {
 		client = await req.pool.connect();
 		const query = `SELECT * FROM "admin" WHERE email=$1;`;
-		const { rows } = await client.query(query, [email]);
+		const { rows } = await client.query(query, [data.email]);
 
 		if (rows.length === 0) {
 			return res
@@ -23,7 +25,7 @@ router.post("/sign-in", async (req, res) => {
 		/* if the user exist, compare the password provided by user
     with the hashed password we stored during user registration
 		*/
-		const isValidPassword = await bcrypt.compare(password, rows[0].password);
+		const isValidPassword = await bcrypt.compare(data.password, rows[0].password);
 		if (!isValidPassword) {
 			return res
 				.status(401)
@@ -46,8 +48,8 @@ router.post("/sign-in", async (req, res) => {
 });
 
 // user authorization
-router.post("/auth", authenticate, (req, res) => {
-	/* 	'authenticate' is a custom we will use
+router.post("/auth", authorize, (req, res) => {
+	/* 	'authorize' is a custom we will use
 	in all the endpoints which we want to protect
 	to verify user identity before sending back the requested resources.
  */

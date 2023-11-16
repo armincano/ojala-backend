@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-function authenticate(req, res, next) {
+function authorize(req, res, next) {
 	// extracts the token from request headers
 	let token = req.header("authorization");
 
@@ -38,4 +38,4 @@ function authenticate(req, res, next) {
 	}
 }
 
-module.exports = authenticate; // we export it to use it inside user router
+module.exports = authorize; // we export it to use it inside user router
