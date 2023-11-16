@@ -6,5 +6,5 @@ const adminPostSchema = [
 ];
 
 module.exports = {
-    contactPostSchema: adminPostSchema
+    adminPostSchema
 };
