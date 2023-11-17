@@ -9,17 +9,21 @@ const { handleNoMatchPath } = require("./middleware/handle-no-match-path");
 const {
 	handleErrorInvalidJson,
 } = require("./middleware/handle-error-invalid-json");
+const cookieParser = require('cookie-parser');
 const contact = require("./routes/contact")
 const admin = require("./routes/admin")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(handleErrorInvalidJson);
 
 app.use(
+	//  Allow Credentials header set to true so incoming cookies can be send
 	cors({
-		origin: ["http://localhost:3000"],
-	})
+		origin: "http://localhost:3000",
+		credentials: true,
+	  })
 );
 
 const pool = new Pool({

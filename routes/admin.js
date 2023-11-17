@@ -23,9 +23,7 @@ router.post("/sign-in", adminPostSchema, validateSchema, async (req, res) => {
 				.json({ error: "Invalid Credential", isAuthenticated: false });
 		}
 
-		/* if the user exist, compare the password provided by user
-    with the hashed password we stored during user registration
-		*/
+		// if the user exist, compare the password provided by user with the hashed password we stored during user registration
 		const isValidPassword = await bcrypt.compare(data.password, rows[0].password);
 		if (!isValidPassword) {
 			return res
@@ -33,11 +31,16 @@ router.post("/sign-in", adminPostSchema, validateSchema, async (req, res) => {
 				.json({ error: "Invalid Credential", isAuthenticated: false });
 		}
 
-		/* if the password matches with hashed password
-    then generate a new token and send it back to user
-    */
+		// if the password matches with hashed password, then generate a new token and send it back to user
 		const jwtToken = generateJwt(rows[0].id);
-		return res.status(200).send({ jwtToken, isAuthenticated: true });
+		
+		const cookieOptions = {
+			httpOnly: true, // Set the cookie to HTTP-only
+			secure: false, // Set the cookie to secure (HTTPS only)
+			maxAge: 3600000, // Set the cookie expiration time to 1 hour in milliseconds
+		};
+		res.cookie('accessToken', jwtToken, cookieOptions);
+		return res.status(200).send('The cookie has been sent.');
 	} catch (error) {
 		console.error(error.message);
 		res.status(500).send({ error: error.message });
