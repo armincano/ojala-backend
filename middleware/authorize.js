@@ -3,7 +3,8 @@ require("dotenv").config();
 
 function authorize(req, res, next) {
 	// extracts the token from request headers
-	let token = req.header("authorization");
+	let token = req.cookies['accessToken'];
+	// console.log(token);
 
 	// Check if token exists
 	if (!token) {
@@ -12,7 +13,8 @@ function authorize(req, res, next) {
 			.send({ message: "authorization denied", isAuthenticated: false });
 	}
 	// If a token is found in the headers, it splits it to separate the "Bearer" prefix (commonly used with tokens) from the actual token value.
-	token = token.split(" ")[1];
+	// token = token.split(" ")[1];
+	// now we are using just the value token from the httpOnly cookie.
 
 	// Verify token using jwt.verify()
 	try {
