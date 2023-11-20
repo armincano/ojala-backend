@@ -12,7 +12,12 @@ const contactPostSchema = [
     body("issue").matches(/app-install|app-mistake|other/).escape(),
 ];
 
+const contactDeleteSchema = [
+    param("visitorIssueId").exists({values: "falsy"}).isInt({min: 1}).withMessage("Issues start from id 1").escape(),
+];
+
 module.exports = {
 	contactGetSchema,
-    contactPostSchema
+    contactPostSchema,
+    contactDeleteSchema
 };

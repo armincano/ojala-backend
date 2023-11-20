@@ -7,8 +7,7 @@ const { validateSchema } = require("../middleware/validate-schema");
 const {adminPostSchema} = require("../validation/admin-schema");
 const router = express.Router();
 
-// user sign-in / login
-router.post("/sign-in", adminPostSchema, validateSchema, async (req, res) => {
+router.post("/login", adminPostSchema, validateSchema, async (req, res) => {
 	let client;
 	const data = matchedData(req);
 
@@ -51,17 +50,17 @@ router.post("/sign-in", adminPostSchema, validateSchema, async (req, res) => {
 }
 });
 
-// user authorization
-router.post("/auth", authorize, (req, res) => {
-	/* 	'authorize' is a custom we will use
-	in all the endpoints which we want to protect
-	to verify user identity before sending back the requested resources.
- */
+router.post("/logout", authorize, (req, res) => {
+
 	try {
-		res.status(200).send({ isAuthenticated: true });
+		
 	} catch (error) {
 		console.error(error.message);
-		res.status(500).send({ error: error.message, isAuthenticated: false });
+		res.status(500).send({ error: error.message});
+	} finally {
+		if (client) {
+			client.release();
+		}
 	}
 });
 

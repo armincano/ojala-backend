@@ -5,6 +5,7 @@ const { validateSchema } = require("../middleware/validate-schema");
 const {
 	contactGetSchema,
 	contactPostSchema,
+	contactDeleteSchema
 } = require("../validation/contact-schema");
 const authorize = require("../middleware/authorize");
 
@@ -14,7 +15,7 @@ router.get("/", authorize, async (req, res) => {
 	try {
 		client = await req.pool.connect();
 
-		const query = `SELECT v.id, v.first_name, v.last_name, v.email, vu.issue, vu.submit_date
+		const query = `SELECT vu.id, v.first_name, v.last_name, v.email, vu.issue, vu.submit_date
 		FROM visitor v
 		join visitor_issue vu on v.id = vu.visitor_id
 		ORDER BY v.last_name;`;
@@ -108,6 +109,39 @@ router.post("/", contactPostSchema, validateSchema, async (req, res) => {
 
 		console.error("Error in /contact route:", error);
 		return res.status(500).json({ error: "Internal Server Error" });
+	} finally {
+		if (client) {
+			client.release();
+		}
+	}
+});
+
+router.delete("/:visitorIssueId", authorize, contactDeleteSchema, validateSchema, async (req, res) => {
+	const data = matchedData(req);
+	try {
+		client = await req.pool.connect();
+
+		const query = "SELECT * FROM visitor_issue where id=$1;";
+		const { rows } = await client.query(query, [data.visitorIssueId]);
+
+		if (!rows.length > 0) {
+			throw new Error("visitor-issue-id-doesnt-exist");
+		} else {
+			const query = `DELETE FROM visitor_issue
+			WHERE id = $1;`;
+
+			const { rows } = await client.query(query, [data.visitorIssueId]);
+			return res
+				.status(200)
+				.send(`Visitor issue id ${data.visitorIssueId} was deleted`);
+		}
+	} catch (error) {
+		if (error.message === "visitor-issue-id-doesnt-exist") {
+			return res.status(400).send("visitor issue id doesn't exist!");
+		} else {
+			console.error("Error in contact/ route:", error);
+			return res.status(500).json({ error: "Internal Server Error" });
+		}
 	} finally {
 		if (client) {
 			client.release();
