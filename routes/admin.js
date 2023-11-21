@@ -4,7 +4,7 @@ const authorize = require("../middleware/authorize");
 const generateJwt = require("../utils/utils.generateJwt");
 const { matchedData } = require("express-validator");
 const { validateSchema } = require("../middleware/validate-schema");
-const {adminPostSchema} = require("../validation/admin-schema");
+const { adminPostSchema } = require("../validation/admin-schema");
 const router = express.Router();
 
 router.post("/login", adminPostSchema, validateSchema, async (req, res) => {
@@ -23,7 +23,10 @@ router.post("/login", adminPostSchema, validateSchema, async (req, res) => {
 		}
 
 		// if the user exist, compare the password provided by user with the hashed password we stored during user registration
-		const isValidPassword = await bcrypt.compare(data.password, rows[0].password);
+		const isValidPassword = await bcrypt.compare(
+			data.password,
+			rows[0].password
+		);
 		if (!isValidPassword) {
 			return res
 				.status(401)
@@ -32,31 +35,17 @@ router.post("/login", adminPostSchema, validateSchema, async (req, res) => {
 
 		// if the password matches with hashed password, then generate a new token and send it back to user
 		const jwtToken = generateJwt(rows[0].id);
-		
+
 		const cookieOptions = {
 			httpOnly: true, // Set the cookie to HTTP-only
 			secure: false, // Set the cookie to secure (HTTPS only)
 			maxAge: 3600000, // Set the cookie expiration time to 1 hour in milliseconds
 		};
-		res.cookie('accessToken', jwtToken, cookieOptions);
-		return res.status(200).send('The cookie has been sent.');
+		res.cookie("accessToken", jwtToken, cookieOptions);
+		return res.status(200).send("The cookie has been sent.");
 	} catch (error) {
 		console.error(error.message);
 		res.status(500).send({ error: error.message });
-	} finally {
-	if (client) {
-		client.release();
-	}
-}
-});
-
-router.post("/logout", authorize, (req, res) => {
-
-	try {
-		
-	} catch (error) {
-		console.error(error.message);
-		res.status(500).send({ error: error.message});
 	} finally {
 		if (client) {
 			client.release();
@@ -64,4 +53,22 @@ router.post("/logout", authorize, (req, res) => {
 	}
 });
 
-module.exports = router; 
+router.get("/logout", async (req, res) => {
+	let client;
+	try {
+		client = await req.pool.connect();
+		let token = req.cookies['accessToken'];
+		req.blacklistedTokens.add(token);
+		res.clearCookie("accessToken");
+		return res.status(200).send("Logout succesful.");
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).send({ error: error.message });
+	} finally {
+		if (client) {
+			client.release();
+		}
+	}
+});
+
+module.exports = router;
