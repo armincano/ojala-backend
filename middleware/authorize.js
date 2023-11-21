@@ -3,8 +3,10 @@ require("dotenv").config();
 
 function authorize(req, res, next) {
 	// extracts the token from request headers
-	let token = req.cookies['accessToken'];
-	// console.log(token);
+	let token = req.cookies["accessToken"];
+	if (req.blacklistedTokens.has(token)) {
+		return res.status(401).send({ message: "Token is not valid" });
+	}
 
 	// Check if token exists
 	if (!token) {

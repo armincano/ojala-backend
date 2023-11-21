@@ -36,9 +36,12 @@ const pool = new Pool({
 
 checkPoolConnection(pool)
 
+let blacklistedTokens = new Set();
+
 // attaches the pool object to the req object as req.pool.
 app.use((req, res, next) => {
 	req.pool = pool;
+	req.blacklistedTokens = blacklistedTokens;
 	next();
   });
   
