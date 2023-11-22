@@ -131,3 +131,4 @@ dist
 
 # DSSTORE
 .DS_Store
+.vercel
