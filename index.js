@@ -44,6 +44,10 @@ app.use((req, res, next) => {
 	next();
   });
 
+app.get("/", (req, res) => {
+	res.send("The Ojala Server is alive!");
+});
+
 app.use("/contact", contact)
 
 app.use("/admin", admin)
