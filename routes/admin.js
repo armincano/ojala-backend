@@ -1,6 +1,5 @@
 const express = require("express");
 const bcrypt = require("bcrypt"); //hash password before saving it to DB
-const authorize = require("../middleware/authorize");
 const generateJwt = require("../utils/utils.generateJwt");
 const { matchedData } = require("express-validator");
 const { validateSchema } = require("../middleware/validate-schema");

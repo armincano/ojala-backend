@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 const cors = require("cors");
 const { Pool } = require("pg");
 const { checkPoolConnection } = require("./utils/utils.pool")
@@ -21,7 +20,7 @@ app.use(handleErrorInvalidJson);
 app.use(
 	//  Allow Credentials header set to true so incoming cookies can be send
 	cors({
-		origin: "http://localhost:3000",
+		origin: process.env.CORS_ORIGIN,
 		credentials: true,
 	  })
 );
@@ -44,11 +43,6 @@ app.use((req, res, next) => {
 	req.blacklistedTokens = blacklistedTokens;
 	next();
   });
-  
-
-app.get("/", (req, res) => {
-	res.send("Hello World!");
-});
 
 app.use("/contact", contact)
 

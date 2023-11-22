@@ -1,6 +1,6 @@
 const checkPoolConnection = (pool) => {
     pool.on('connect', () => {
-        console.log('connected to the db');
+        // console.log('connected to the db');
     })
 };
 
