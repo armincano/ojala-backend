@@ -5,6 +5,7 @@ const { matchedData } = require("express-validator");
 const { validateSchema } = require("../middleware/validate-schema");
 const { adminPostSchema } = require("../validation/admin-schema");
 const router = express.Router();
+require("dotenv").config();
 
 router.post("/login", adminPostSchema, validateSchema, async (req, res) => {
 	let client;
@@ -37,8 +38,9 @@ router.post("/login", adminPostSchema, validateSchema, async (req, res) => {
 
 		const cookieOptions = {
 			httpOnly: true, // Set the cookie to HTTP-only
-			secure: false, // Set the cookie to secure (HTTPS only)
+			secure: process.env.COOKIE_OPTION_SECURE, // Set the cookie to secure (HTTPS only)
 			maxAge: 3600000, // Set the cookie expiration time to 1 hour in milliseconds
+			sameSite: 'None' // Set the SameSite option to None
 		};
 		res.cookie("accessToken", jwtToken, cookieOptions);
 		return res.status(200).send("The cookie has been sent.");
