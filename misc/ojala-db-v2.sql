@@ -31,12 +31,7 @@ insert into visitor_issue (visitor_id,issue,submit_date) values
 (1,'app-install','2023-11-05'),
 (2,'app-mistake','2023-11-05'),
 (1,'other','2023-11-05');
-/*
- * JWT_SECRET=test-secret
- * this value admin has a public JWT_SECRET
- * erase before deployment
- */
+
 INSERT INTO "admin" ("user",email,"password") values
-('linus_torvalds','ojala3@mail.com','$2b$10$a7ElUO1aUXGMeIbi.hSKXOzB58VQtYlSGT9udYtpsfZTszSxq2J2a'),
-('admin-1','ojala1@mail.com','$2b$10$4aRMXOrIzk2zXDpF3R6eH.W0Wt.oiytsFroFX5uyIcEiK16FoONUG');
+('linus_torvalds','ojala3@mail.com','$2b$10$a7ElUO1aUXGMeIbi.hSKXOzB58VQtYlSGT9udYtpsfZTszSxq2J2a');
 
