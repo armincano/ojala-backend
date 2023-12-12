@@ -22,8 +22,8 @@ Before you begin, ensure you have met the following requirements:
 
 - A code editor of your choice (e.g., Visual Studio Code).
 - [Node.js](https://nodejs.org/) installed on your local machine.
-  > [!IMPORTANT]  
-  > Node.js Version 20.6.0 or higher is required.
+> [!IMPORTANT]  
+> Node.js Version 20.6.0 or higher is required.
 - PostgreSQL installed. If you are using Mac, we recommend you the full-featured PostgreSQL installation package "Postgres.app".
 
 ### Installation
